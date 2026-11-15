@@ -23,8 +23,24 @@ async function printReport() {
       }
 }
 
+async function processMessage(msg) {
+    const orderData = JSON.parse(msg.content)
+    try {
+        if (orderData.products && orderData.products.length > 0) {
+            await updateReport(orderData.products)
+            console.log(`✔ NEW SALE TO ${orderData.name}. CURRENT REPORT:`)
+            await printReport()
+        } else {
+            console.log(`X ERROR, ORDER WITHOUT PRODUCTS`)
+        }
+    } catch (error) {
+        console.log(`X ERROR TO PROCESS: ${error.message}`)
+    }
+}
+
 async function consume() {
-    //TODO: Constuir a comunicação com a fila 
-} 
+    console.log(`SUCCESSFULLY SUBSCRIBED TO QUEUE: ${process.env.RABBITMQ_QUEUE_NAME}`)
+    await (await RabbitMQService.getInstance()).consume(process.env.RABBITMQ_QUEUE_NAME, (msg) => {processMessage(msg)})
+}
 
 consume()
