@@ -4,10 +4,10 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
 function isValidOrder(orderData) {
-    if(!orderData.products  || orderData.products.length <= 0) { //SEM PRODUTO
+    if(!orderData.products  || orderData.products.length <= 0) {
         return false
     }
-    if(!orderData.cpf || !orderData.name) { //SEM DADOS PESSOAIS
+    if(!orderData.cpf || !orderData.name) {
         return false
     }
     return true
